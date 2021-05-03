@@ -1,0 +1,34 @@
+kafka-properties:
+  bootstrap-server: localhost:9092
+  topic-name: users
+  group-id: test
+  partitions-num: 3
+  replication-factor: 1
+
+server:
+  port: 9000
+spring:
+  kafka:
+    properties:
+      schema.registry.url: http://localhost:8081
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: test
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+        specific.avro.reader: true
+
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+        specific.avro.reader: true
+
+logging:
+  level:
+    root: info
